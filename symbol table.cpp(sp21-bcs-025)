@@ -1,24 +1,19 @@
-// https://www.geeksforgeeks.org/cpp-program-to-implement-symbol-table/
-//C++ implementation of Symbol Table using the concept of Hashing with separate chaining
 #include <iostream> 
 using namespace std; 
 
 const int MAX = 100; 
 
 class Node { 
-
 	string identifier, scope, type; 
 	int lineNo; 
 	Node* next; 
 
 public: 
-	Node() 
-	{ 
+	Node() { 
 		next = NULL; 
 	} 
 
-	Node(string key, string value, string type, int lineNo) 
-	{ 
+	Node(string key, string value, string type, int lineNo) { 
 		this->identifier = key; 
 		this->scope = value; 
 		this->type = type; 
@@ -26,8 +21,7 @@ public:
 		next = NULL; 
 	} 
 
-	void print() 
-	{ 
+	void print() { 
 		cout << "Identifier's Name:" << identifier 
 			<< "\nType:" << type 
 			<< "\nScope: " << scope 
@@ -40,8 +34,7 @@ class SymbolTable {
 	Node* head[MAX]; 
 
 public: 
-	SymbolTable() 
-	{ 
+	SymbolTable() { 
 		for (int i = 0; i < MAX; i++) 
 			head[i] = NULL; 
 	} 
@@ -60,43 +53,40 @@ public:
 
 // Function to modify an identifier 
 bool SymbolTable::modify(string id, string s, 
-						string t, int l) 
-{ 
+						string t, int l) { 
 	int index = hashf(id); 
 	Node* start = head[index]; 
 
 	if (start == NULL) 
-		return "-1"; 
+		return false; // Return false if the identifier is not found
 
 	while (start != NULL) { 
 		if (start->identifier == id) { 
 			start->scope = s; 
 			start->type = t; 
 			start->lineNo = l; 
-			return true; 
+			return true; // Return true if modification is successful
 		} 
 		start = start->next; 
 	} 
 
-	return false; // id not found 
+	return false; // Return false if the identifier is not found 
 } 
 
 // Function to delete an identifier 
-bool SymbolTable::deleteRecord(string id) 
-{ 
+bool SymbolTable::deleteRecord(string id) { 
 	int index = hashf(id); 
 	Node* tmp = head[index]; 
 	Node* par = head[index]; 
 
-	// no identifier is present at that index 
 	if (tmp == NULL) { 
-		return false; 
+		return false; // Return false if the identifier is not found
 	} 
-	// only one identifier is present 
+
 	if (tmp->identifier == id && tmp->next == NULL) { 
 		tmp->next = NULL; 
 		delete tmp; 
-		return true; 
+		return true; // Return true if deletion is successful
 	} 
 
 	while (tmp->identifier != id && tmp->next != NULL) { 
@@ -107,45 +97,40 @@ bool SymbolTable::deleteRecord(string id)
 		par->next = tmp->next; 
 		tmp->next = NULL; 
 		delete tmp; 
-		return true; 
+		return true; // Return true if deletion is successful
 	} 
-
-	// delete at the end 
 	else { 
 		par->next = NULL; 
 		tmp->next = NULL; 
 		delete tmp; 
-		return true; 
+		return true; // Return true if deletion is successful
 	} 
-	return false; 
+	return false; // Return false if the identifier is not found
 } 
 
 // Function to find an identifier 
-string SymbolTable::find(string id) 
-{ 
+string SymbolTable::find(string id) { 
 	int index = hashf(id); 
 	Node* start = head[index]; 
 
 	if (start == NULL) 
-		return "-1"; 
+		return "-1"; // Return "-1" if the identifier is not found
 
 	while (start != NULL) { 
-
 		if (start->identifier == id) { 
 			start->print(); 
-			return start->scope; 
+			return start->scope; // Return the scope of the identifier if found
 		} 
 
 		start = start->next; 
 	} 
 
-	return "-1"; // not found 
+	return "-1"; // Return "-1" if the identifier is not found
 } 
 
 // Function to insert an identifier 
 bool SymbolTable::insert(string id, string scope, 
-						string Type, int lineno) 
-{ 
+						string Type, int lineno) { 
 	int index = hashf(id); 
 	Node* p = new Node(id, scope, Type, lineno); 
 
@@ -154,7 +139,7 @@ bool SymbolTable::insert(string id, string scope,
 		cout << "\n"
 			<< id << " inserted"; 
 
-		return true; 
+		return true; // Return true if insertion is successful
 	} 
 
 	else { 
@@ -166,14 +151,14 @@ bool SymbolTable::insert(string id, string scope,
 		cout << "\n"
 			<< id << " inserted"; 
 
-		return true; 
+		return true; // Return true if insertion is successful
 	} 
 
-	return false; 
+	return false; // Return false if insertion fails
 } 
 
-int SymbolTable::hashf(string id) 
-{ 
+// Hash function 
+int SymbolTable::hashf(string id) { 
 	int asciiSum = 0; 
 
 	for (int i = 0; i < id.length(); i++) { 
@@ -184,8 +169,7 @@ int SymbolTable::hashf(string id)
 } 
 
 // Driver code 
-int main() 
-{ 
+int main() { 
 	SymbolTable st; 
 	string check; 
 	cout << "**** SYMBOL_TABLE ****\n"; 
@@ -228,4 +212,3 @@ int main()
 
 	return 0; 
 } 
-
